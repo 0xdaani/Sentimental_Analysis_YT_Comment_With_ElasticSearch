@@ -10,10 +10,9 @@ class YoutubeScraper:
     """docstring for YoutubeScraper"""
     def __init__(self, api_key, videoId):
         print("[*] Init youtube scraper")
+        
         self.api_key = api_key
         self.videoId = videoId
-
-        # creating youtube resource object
         self.youtube = build('youtube', 'v3', developerKey=self.api_key)
 
         # retrieve youtube video results
@@ -30,18 +29,14 @@ class YoutubeScraper:
         print("[*] Starting scraping")
 
         print("[**] Getting comments from: https://www.youtube.com/watch?v={}".format(self.videoId))
-        # iterate video response
         while self.video_response:
 
-            # extracting required info
-            # from each result object 
             for item in self.video_response['items']:
                 self.comments.append(item)
 
                 if verbose:
                     print(item)
 
-            # Again repeat
             if 'nextPageToken' in self.video_response:
                 self.video_response = self.youtube.commentThreads().list(
                         part = 'snippet,replies',
@@ -68,14 +63,12 @@ class YoutubeScraper:
             item['snippet']['topLevelComment']['snippet']['analysisSentimental'] = sentiment_analyzer(item['snippet']['topLevelComment']['snippet']['textDisplay'][:MAX_CARACTERE])
 
         if verbose:
-            # Display the results
             for item in self.comments:
                 print("Text : {}\nSentiment analysis score: {}\n".format(item['snippet']['topLevelComment']['snippet']['textDisplay'], item['snippet']['topLevelComment']['snippet']['analysisSentimental']))
 
         print("[**] Adding sentiment analysis score")
 
 if __name__ == '__main__':    
-    # faire un simple url
     videoId = 'nLRL_NcnK-4'
 
     ys = YoutubeScraper('XXXXXXXX', videoId)
