@@ -1,6 +1,3 @@
-# send data to elastic
-# https://www.elastic.co/guide/en/cloud/current/ec-getting-started-python.html
-
 from elasticsearch import Elasticsearch
 
 class ElasticIndex:
@@ -22,23 +19,20 @@ class ElasticIndex:
 		print("[**] Elastic Connected")
 
 	def query(self, query):
-		# Perform the search
 		result = self.es.search(index=self.index_name, body=query)
 
 		print("[*] Result query on {}".format(self.index_name))
-		# Print the search results
+
 		for hit in result['hits']['hits']:
 		    print(hit['_source'])
 
 	def send_data(self, data, verbose=False):
 		for item in data:
 			# print(item)
-		
-			# Index the document in Elasticsearch
+
 			response = self.es.index(index=self.index_name, body=item)
 
 			if verbose:
-				# Print the response from Elasticsearch (including information about the indexing operation)
 				print(response)
 
 		print("[*] Data added in index {}".format(self.index_name))
@@ -51,11 +45,9 @@ class ElasticIndex:
 		    }
 		}
 
-		# Use the delete_by_query API to delete all documents
 		response = self.es.delete_by_query(index=self.index_name, body=query)
 
 		if verbose:
-			# Print the response from Elasticsearch (including information about the delete operation)
 			print(response)
 
 
@@ -67,7 +59,6 @@ if __name__ == '__main__':
 		index_name="XXXXXXXX"
 	)
 
-	# Define a simple match-all query
 	query = {
 	    "query": {
 	        "match_all": {}
